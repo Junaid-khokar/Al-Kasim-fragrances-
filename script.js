@@ -1,6 +1,5 @@
 const WHATSAPP_NUMBER = "919425072436";
 
-// Replace these sample entries with your real products, ingredients, sizes and prices.
 const fragranceFamilies = [
   {id:"oud",name:"Oud",tag:"DEEP & DISTINCTIVE",description:"Rich, woody scents with depth and character.",symbol:"O",tone:""},
   {id:"fresh",name:"Fresh",tag:"LIGHT & ENERGETIC",description:"Clean, bright scents for an uplifting feel.",symbol:"F",tone:"fresh"},
@@ -19,7 +18,6 @@ const subtypes = {
   musk:["White Musk","Soft Musk","Amber Musk"]
 };
 
-// Demo placeholders only: update every field before accepting orders.
 const products = [
   {id:"oud-01",family:"oud",subtype:"Classic Oud",name:"Your Oud Fragrance",notes:"Oud, woods and warm resins",material:"Add actual materials / notes",size:"[e.g. 50 ml]",price:"₹[Price]",offer:"₹[Offer price]"},
   {id:"oud-02",family:"oud",subtype:"Oud & Rose",name:"Your Oud & Rose",notes:"Oud with a floral rose character",material:"Add actual materials / notes",size:"[e.g. 30 ml]",price:"₹[Price]",offer:"₹[Offer price]"},
@@ -37,18 +35,98 @@ const productGrid = document.getElementById("productGrid");
 let selectedFamily = null;
 let selectedSubtype = "All";
 
+// Slider State variables
+let currentIndex = 0;
+let autoSlideTimer = null;
+
 function renderCategories(){
   categoryGrid.innerHTML = fragranceFamilies.map(f => `
     <article class="category-card" data-family="${f.id}" tabindex="0" role="button" aria-label="Explore ${f.name} fragrances">
       <div class="category-visual ${f.tone}"><div class="category-symbol">${f.symbol}</div></div>
       <div class="category-info"><small>${f.tag}</small><h3>${f.name} Fragrances</h3><p>${f.description}</p><span class="discover">EXPLORE FAMILY <span>→</span></span></div>
     </article>`).join("");
+
   categoryGrid.querySelectorAll(".category-card").forEach(card => {
     const open = () => openFamily(card.dataset.family);
     card.addEventListener("click", open);
     card.addEventListener("keydown", e => { if(e.key === "Enter" || e.key === " "){e.preventDefault();open();} });
   });
+
+  initSlider();
 }
+
+function initSlider() {
+  const cards = categoryGrid.querySelectorAll(".category-card");
+  const totalCards = cards.length;
+
+  function getVisibleCards() {
+    if (window.innerWidth <= 600) return 1;
+    if (window.innerWidth <= 850) return 2;
+    return 3;
+  }
+
+  function updateSlider() {
+    const visibleCards = getVisibleCards();
+    const maxIndex = Math.max(0, totalCards - visibleCards);
+    if (currentIndex > maxIndex) currentIndex = 0;
+    if (currentIndex < 0) currentIndex = maxIndex;
+
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const gap = 17;
+    const moveAmount = (cardWidth + gap) * currentIndex;
+    categoryGrid.style.transform = `translateX(-${moveAmount}px)`;
+  }
+
+  function nextSlide() {
+    const visibleCards = getVisibleCards();
+    const maxIndex = totalCards - visibleCards;
+    if (currentIndex >= maxIndex) {
+      currentIndex = 0;
+    } else {
+      currentIndex++;
+    }
+    updateSlider();
+  }
+
+  function prevSlide() {
+    const visibleCards = getVisibleCards();
+    const maxIndex = totalCards - visibleCards;
+    if (currentIndex <= 0) {
+      currentIndex = maxIndex;
+    } else {
+      currentIndex--;
+    }
+    updateSlider();
+  }
+
+  // 1 second Auto Slide Interval
+  function startAutoSlide() {
+    stopAutoSlide();
+    autoSlideTimer = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoSlide() {
+    if (autoSlideTimer) clearInterval(autoSlideTimer);
+  }
+
+  document.getElementById("slideNext").addEventListener("click", () => {
+    nextSlide();
+    startAutoSlide();
+  });
+
+  document.getElementById("slidePrev").addEventListener("click", () => {
+    prevSlide();
+    startAutoSlide();
+  });
+
+  const wrapper = document.getElementById("sliderWrapper");
+  wrapper.addEventListener("mouseenter", stopAutoSlide);
+  wrapper.addEventListener("mouseleave", startAutoSlide);
+
+  window.addEventListener("resize", updateSlider);
+  startAutoSlide();
+}
+
 function openFamily(id){
   selectedFamily = id; selectedSubtype = "All";
   const family = fragranceFamilies.find(f => f.id === id);
@@ -58,6 +136,7 @@ function openFamily(id){
   renderSubtypes(); renderProducts();
   catalogPanel.scrollIntoView({behavior:"smooth",block:"start"});
 }
+
 function renderSubtypes(){
   const options = ["All", ...(subtypes[selectedFamily] || [])];
   subtypeList.innerHTML = options.map(s => `<button class="subtype-chip ${s===selectedSubtype?"active":""}" data-subtype="${s}">${s}</button>`).join("");
@@ -65,6 +144,7 @@ function renderSubtypes(){
     selectedSubtype = btn.dataset.subtype; renderSubtypes(); renderProducts();
   }));
 }
+
 function renderProducts(){
   const items = products.filter(p => p.family === selectedFamily && (selectedSubtype === "All" || p.subtype === selectedSubtype));
   if(!items.length){productGrid.innerHTML = '<p class="empty-products">Products for this fragrance type will be added soon.</p>';return;}
@@ -81,16 +161,28 @@ function renderProducts(){
     </article>`).join("");
   productGrid.querySelectorAll(".order-button").forEach(btn => btn.addEventListener("click", () => orderProduct(btn.dataset.product)));
 }
+
 function orderProduct(id){
   const p = products.find(item => item.id === id);
   if(!p) return;
   const message = `Hello Al-Kasim Fragrances, I would like to order ${p.name}.\nFragrance: ${p.subtype}\nSize: ${p.size}\nOffer price: ${p.offer}\nPlease share availability and ordering details.`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,"_blank","noopener");
 }
+
 document.getElementById("backToCategories").addEventListener("click",()=>{
   catalogPanel.hidden = true;
   document.getElementById("fragrances").scrollIntoView({behavior:"smooth"});
 });
+
+// const menuToggle = document.getElementById("menuToggle");
+// const mainNav = document.getElementById("mainNav");
+// menuToggle.addEventListener("click",()=>{
+//   const open = mainNav.classList.toggle("open");
+//   menuToggle.setAttribute("aria-expanded",String(open));
+// });
+// mainNav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mainNav.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");}));
+// document.getElementById("year").textContent = new Date().getFullYear();
+
 const menuToggle = document.getElementById("menuToggle");
 const mainNav = document.getElementById("mainNav");
 menuToggle.addEventListener("click",()=>{
@@ -99,4 +191,6 @@ menuToggle.addEventListener("click",()=>{
 });
 mainNav.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{mainNav.classList.remove("open");menuToggle.setAttribute("aria-expanded","false");}));
 document.getElementById("year").textContent = new Date().getFullYear();
+
+// Auto slider wali lines hata kar yahan direct renderCategories call kiya hai:
 renderCategories();

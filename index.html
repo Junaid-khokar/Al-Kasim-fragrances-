@@ -19,8 +19,10 @@
   <div class="announcement">A WORLD OF FRAGRANCE, CURATED FOR YOU</div>
   <header class="site-header">
     <a class="brand" href="#home" aria-label="Al-Kasim Fragrances home">
-      <span class="brand-mark">AK</span>
-      <span class="brand-name">AL-KASIM <small>FRAGRANCES</small></span>
+      <!-- <span class="brand-mark">AK</span> -->
+      <span class="brand-name">AL KASIM <small>FRAGRANCES</small></span>
+       <!-- <img src="/LOGO.jpeg" alt="Al-Kasim Fragrances" class="brand-logo"> -->
+      
     </a>
     <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
     <nav class="main-nav" id="mainNav">
@@ -35,8 +37,8 @@
   <main>
     <section class="hero" id="home">
       <div class="hero-copy">
-        <p class="eyebrow"><span></span> THE ART OF FINE FRAGRANCE</p>
-        <h1>A scent that<br><em>speaks for you.</em></h1>
+        <p class="eyebrow"><span></span> PREMIUM LONG LASTING ATTAR & PERFUMES</p>
+        <h1>Luxury you don't wear<br><em>You experience.</em></h1>
         <p class="hero-description">Discover fragrances that leave a lasting impression. Thoughtfully selected scents for every mood, moment and memory.</p>
         <div class="hero-actions">
           <a class="button button-dark" href="#fragrances">Discover fragrances <span>→</span></a>
@@ -56,6 +58,34 @@
       </div>
     </section>
 
+    <!-- SECTION 2: EXPLORE YOUR FRAGRANCE (AUTO SLIDER) -->
+    <section class="collection section-pad" id="fragrances">
+      <div class="section-heading">
+        <div><div class="section-kicker">EXPLORE THE WORLD OF SCENT</div><h2>Our <em>fragrances</em></h2></div>
+        <p>From deep and woody to light and refreshing, explore a fragrance family that matches your mood.</p>
+      </div>
+      
+      <!-- Auto Slider Container -->
+      <div class="slider-wrapper" id="sliderWrapper">
+        <button class="slider-arrow prev" id="slidePrev" aria-label="Previous fragrance">‹</button>
+        <div class="slider-viewport">
+          <div class="category-slider-track" id="categoryGrid"></div>
+        </div>
+        <button class="slider-arrow next" id="slideNext" aria-label="Next fragrance">›</button>
+      </div>
+
+      <div class="catalog-panel" id="catalogPanel" hidden>
+        <div class="catalog-top">
+          <div><div class="section-kicker" id="catalogKicker">THE COLLECTION</div><h3 id="catalogTitle">Explore the collection</h3></div>
+          <button class="back-button" id="backToCategories">← All fragrance families</button>
+        </div>
+        <div class="subtype-list" id="subtypeList"></div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+      <p class="catalog-hint">Select a fragrance family to explore its sub-types and available scents.</p>
+    </section>
+
+    <!-- SECTION 3: INTRO / ABOUT US -->
     <section class="intro section-pad">
       <div class="section-kicker">MORE THAN A FRAGRANCE</div>
       <div class="intro-grid">
@@ -70,23 +100,6 @@
         <article><span>02</span><h3>Know your notes</h3><p>Learn about the ingredients and character behind each fragrance.</p></article>
         <article><span>03</span><h3>Wear the moment</h3><p>Choose a scent for everyday wear, celebrations or special occasions.</p></article>
       </div>
-    </section>
-
-    <section class="collection section-pad" id="fragrances">
-      <div class="section-heading">
-        <div><div class="section-kicker">EXPLORE THE WORLD OF SCENT</div><h2>Our <em>fragrances</em></h2></div>
-        <p>From deep and woody to light and refreshing, explore a fragrance family that matches your mood.</p>
-      </div>
-      <div class="category-grid" id="categoryGrid"></div>
-      <div class="catalog-panel" id="catalogPanel" hidden>
-        <div class="catalog-top">
-          <div><div class="section-kicker" id="catalogKicker">THE COLLECTION</div><h3 id="catalogTitle">Explore the collection</h3></div>
-          <button class="back-button" id="backToCategories">← All fragrance families</button>
-        </div>
-        <div class="subtype-list" id="subtypeList"></div>
-        <div class="product-grid" id="productGrid"></div>
-      </div>
-      <p class="catalog-hint">Select a fragrance family to explore its sub-types and available scents.</p>
     </section>
 
     <section class="brand-story section-pad" id="about">
